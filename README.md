@@ -1,6 +1,6 @@
-# n_a_w
+# StyleAI
 
-A new Flutter project.
+Repository for the StyleAI Mobile Application.
 
 ## Getting Started
 
