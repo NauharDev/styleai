@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "163170575098",
+    "project_id": "styleaiapp",
+    "storage_bucket": "styleaiapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163170575098:android:9cdb02f8b2c8a60e19df43",
+        "android_client_info": {
+          "package_name": "com.example.n_a_w"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163170575098-dn0b6aiu2qob6m4ghb04flhci551a0m9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWODwq760D-2iGjYou9d-fEU4HgPpJJ1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163170575098-dn0b6aiu2qob6m4ghb04flhci551a0m9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "163170575098-k9fu0bdqg7358rhn33g6ppjqb5s0a9u9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nAw"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
