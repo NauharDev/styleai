@@ -2,9 +2,18 @@
 
 Repository for the StyleAI Mobile Application.
 
-## Getting Started
+## Software Requirements to Run This Project
 
-This project is a starting point for a Flutter application.
+For all operating systems:
+- Python 3.11 or higher
+- Flutter 3.7.12 or higher
+- Dart SDK version 2.19.6 or higher
+
+For MacOS:
+- Must have the latest version of XCode installed with XCode command line tools configured to use the latest version of XCode
+- For information on how to deploy the flutter app to an iOS device, please visit https://docs.flutter.dev/get-started/install/macos#deploy-to-ios-devices
+
+## Getting Started
 
 A few resources to get you started if this is your first Flutter project:
 
