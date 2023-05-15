@@ -41,8 +41,8 @@ class _SignInTemplateState extends State<SignInTemplate> {
         signInError = true;
       });
     }
-    print('hello');
     navigatorKey.currentState!.popUntil((route) => route.isFirst,);
+    print('i like cheese');
   }
 
   @override
