@@ -78,7 +78,6 @@ class HomeScreen extends StatelessWidget {
         title: const Text('StyleAI'),
         actions: [
            PopupMenuButton(
-            onOpened: () {},
             onSelected: (value) {value;},
             itemBuilder: (context) {
               return [

@@ -32,7 +32,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
     );
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passController.text.trim());
     } on FirebaseAuthException catch (e) {

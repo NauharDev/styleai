@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'globals.dart' as globals;
+import 'storage.dart';
 
 
 
@@ -51,21 +52,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
 
-  Future<String> getDirectoryPath() async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
-
-  Future<void> saveToImageDirectory(File imageFile) async {
-    final directoryPath = await getDirectoryPath();
-    final fileName = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-    final file = File('$directoryPath/$fileName');
-    print(file.path);
-    await file.writeAsBytes(imageFile.readAsBytesSync());
-    globals.images.add(file);
-  }
-
-
   @override
   Widget build(BuildContext context) {
     bool photosTaken;
@@ -103,7 +89,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
             
                     if (!mounted) return;
-                    saveToImageDirectory(File(image.path));
+                    
                     
                     await Navigator.of(context).push(
                       MaterialPageRoute(
@@ -152,9 +138,24 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
 class DisplayPictureScreen extends StatelessWidget{
   final String imagePath;
+  final Storage storageBucket = Storage();
 
 
-  const DisplayPictureScreen({required this.imagePath, super.key});
+  DisplayPictureScreen({required this.imagePath, super.key});
+
+  Future<String> getDirectoryPath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<void> saveToImageDirectory(File imageFile) async {
+  final directoryPath = await getDirectoryPath();
+  final fileName = "${DateTime.now().millisecondsSinceEpoch}.jpg";
+  final file = File('$directoryPath/$fileName');
+  print(file.path);
+  await file.writeAsBytes(imageFile.readAsBytesSync());
+  globals.images.add(file);
+  }
 
     @override
   Widget build(BuildContext context) {
@@ -173,10 +174,43 @@ class DisplayPictureScreen extends StatelessWidget{
               fit: FlexFit.tight, 
               child: TextButton(
                 child: const Text('Save Image'),
-                onPressed: () => {
-                  globals.imagePaths.add(imagePath),
+                onPressed: () {
+                  switch (globals.imagePaths.length) {
+                    case 0: {
+                      storageBucket.uploadPhoto(imagePath, 'image1.jpg').then((value) {
+                        print('done');
+                      },);
+                      break;
+                    }
+                    case 1: {
+                      storageBucket.uploadPhoto(imagePath, 'image2.jpg').then((value) {
+                        print('done');
+                      },);
+                      break;
+                    }
+                    case 2: {
+                      storageBucket.uploadPhoto(imagePath, 'image3.jpg').then((value) {
+                        print('done');
+                      },);
+                      break;
+                    }
+                    case 3: {
+                      storageBucket.uploadPhoto(imagePath, 'image4.jpg').then((value) {
+                        print('done');
+                      },);
+                      break;
+                    }
+                    case 4: {
+                      storageBucket.uploadPhoto(imagePath, 'image5.jpg').then((value) {
+                        print('done');
+                      },);
+                      break;
+                    }
+
+                  }
+                  globals.imagePaths.add(imagePath);
                   Navigator.push(context, 
-                  MaterialPageRoute(builder: (context) => TakePictureScreen(globals.cameras, globals.imagePaths),))
+                  MaterialPageRoute(builder: (context) => TakePictureScreen(globals.cameras, globals.imagePaths),));
                 }
               )
             )
