@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'components/buttons.dart';
 
 // ignore: must_be_immutable
 class SignInTemplate extends StatefulWidget {
@@ -251,7 +252,9 @@ class _SignInTemplateState extends State<SignInTemplate> {
                 },
               ),
             ]),
-            const Spacer(flex: 2),
+            const Spacer(flex: 1),
+            const SquareTile(purpose: 'google',imagePath: 'assets/btn_google_light_normal_ios.png',),
+            const Spacer(flex: 1)
             // Flexible(
             //   fit: FlexFit.tight,
             //   child: StreamBuilder(

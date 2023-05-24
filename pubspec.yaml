@@ -44,7 +44,7 @@ dependencies:
   dio: ^5.1.1
   firebase_core: ^2.11.0
   firebase_auth:
-  google_sign_in:
+  google_sign_in: ^6.1.1
   firebase_analytics:
   firebase_storage: ^11.2.1
 
@@ -64,6 +64,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
