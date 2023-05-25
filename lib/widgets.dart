@@ -1,3 +1,4 @@
+import 'package:n_a_w/cloud storage/storage.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'globals.dart' as globals;
@@ -17,6 +18,7 @@ class SignInTemplate extends StatefulWidget {
 }
 
 class _SignInTemplateState extends State<SignInTemplate> {
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passController = TextEditingController();
   final confirmController = TextEditingController();
@@ -33,7 +35,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
     );
 
     try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passController.text.trim());
     } on FirebaseAuthException catch (e) {
@@ -56,6 +58,8 @@ class _SignInTemplateState extends State<SignInTemplate> {
         });
       }
     }
+    globals.storageName = nameController.text.trim();
+    Storage.createStorage(globals.storageName);
     navigatorKey.currentState!.pop();
   }
 
@@ -113,7 +117,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
             const Spacer(flex: 1),
             Text(widget.newUser ? 'Sign Up' : 'Log In',
                 style: Theme.of(context).textTheme.bodyLarge),
-            const Spacer(flex: 4),
+            const Spacer(flex: 7),
             Visibility(
               visible: invalidInput || signInError,
               child: Container(
@@ -126,16 +130,41 @@ class _SignInTemplateState extends State<SignInTemplate> {
                 ),
               ),
             ),
+            Visibility(
+              visible: widget.newUser,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width - 20.0,
+                child: TextField(
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  controller: nameController, 
+                  autocorrect: false,
+                  decoration: InputDecoration(hintText: "Full Name", hintStyle: Theme.of(context).textTheme.bodyMedium),
+                  onChanged: (value) {
+                    if (emailController.text == '' ||
+                        passController.text == '' ||
+                        (widget.newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
+                      return;
+                    } else {
+                      setState(() {
+                        invalidInput = false;
+                      });
+                    }
+                    
+                  },
+                ),
+              ),
+            ),
             SizedBox(
               width: MediaQuery.of(context).size.width - 20.0,
               child: TextField(
+                style: Theme.of(context).textTheme.bodyMedium,
                 controller: emailController,
                 autocorrect: false,
-                decoration: const InputDecoration(hintText: 'email'),
+                decoration: InputDecoration(hintText: 'email', hintStyle: Theme.of(context).textTheme.bodyMedium),
                 onChanged: (value) {
                   if (emailController.text == '' ||
                       passController.text == '' ||
-                      (widget.newUser && confirmController.text == '')) {
+                      (widget.newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
                     return;
                   } else {
                     setState(() {
@@ -148,24 +177,26 @@ class _SignInTemplateState extends State<SignInTemplate> {
             SizedBox(
               width: MediaQuery.of(context).size.width - 20.0,
               child: TextField(
+                style: Theme.of(context).textTheme.bodyMedium,
                 controller: passController,
                 autocorrect: false,
-                decoration: const InputDecoration(hintText: 'password'),
+                decoration: InputDecoration(hintText: 'password', hintStyle: Theme.of(context).textTheme.bodyMedium),
                 onChanged: (value) {
                   if (emailController.text == '' ||
                       passController.text == '' ||
-                      (widget.newUser && confirmController.text == '')) {
+                      (widget.newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
                     return;
                   } else {
                     setState(() {
                       invalidInput = false;
                     });
                   }
-                  if (passController.text.trim() == confirmController.text.trim()) {
-                      setState(() {
-                        signInError = false;
-                      });
-                    }
+                  if (passController.text.trim() ==
+                      confirmController.text.trim()) {
+                    setState(() {
+                      signInError = false;
+                    });
+                  }
                 },
               ),
             ),
@@ -182,14 +213,15 @@ class _SignInTemplateState extends State<SignInTemplate> {
                   onChanged: (value) {
                     if (emailController.text == '' ||
                         passController.text == '' ||
-                        (widget.newUser && confirmController.text == '')) {
+                        (widget.newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
                       return;
                     } else {
                       setState(() {
                         invalidInput = false;
                       });
                     }
-                    if (passController.text.trim() == confirmController.text.trim()) {
+                    if (passController.text.trim() ==
+                        confirmController.text.trim()) {
                       setState(() {
                         signInError = false;
                       });
@@ -230,14 +262,20 @@ class _SignInTemplateState extends State<SignInTemplate> {
                 onPressed: () {
                   if (emailController.text == '' ||
                       passController.text == '' ||
-                      (widget.newUser && confirmController.text == '')) {
+                      (widget.newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
                     setState(
                       () {
                         invalidInput = true;
                       },
                     );
                   } else if (widget.newUser) {
-                    if (confirmController.text.trim() !=
+                    if (nameController.text.trim().contains('/')) {
+                      setState(() {
+                        signInError = true;
+                        errorText = 'The given name is invalid. Please refrain from using \'/\' in the name.';
+                      });
+                    }
+                    else if (confirmController.text.trim() !=
                         passController.text.trim()) {
                       setState(() {
                         signInError = true;
@@ -253,8 +291,29 @@ class _SignInTemplateState extends State<SignInTemplate> {
               ),
             ]),
             const Spacer(flex: 1),
-            const SquareTile(purpose: 'google',imagePath: 'assets/btn_google_light_normal_ios.png',),
-            const Spacer(flex: 1)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Divider(
+                  color: Colors.black,
+                  thickness: 10.0,
+                ),
+                Text(
+                  'OR',
+                  style: Typography.whiteCupertino.labelSmall,
+                ),
+                const Divider(color: Colors.white, thickness: 10.0)
+              ],
+            ),
+
+            const Spacer(
+              flex: 1,
+            ),
+            const SquareTile(
+              purpose: 'Google',
+              imagePath: 'assets/btn_google_light_normal_ios.png',
+            ),
+            const Spacer(flex: 2)
             // Flexible(
             //   fit: FlexFit.tight,
             //   child: StreamBuilder(

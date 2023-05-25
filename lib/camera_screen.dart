@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'globals.dart' as globals;
-import 'storage.dart';
+import 'cloud storage/storage.dart';
 
 
 
@@ -89,6 +89,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
             
                     if (!mounted) return;
+
+                    print(image.path);
                     
                     
                     await Navigator.of(context).push(
@@ -177,31 +179,31 @@ class DisplayPictureScreen extends StatelessWidget{
                 onPressed: () {
                   switch (globals.imagePaths.length) {
                     case 0: {
-                      storageBucket.uploadPhoto(imagePath, 'image1.jpg').then((value) {
+                      Storage.uploadPhoto(globals.storageName, imagePath, 'image1.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 1: {
-                      storageBucket.uploadPhoto(imagePath, 'image2.jpg').then((value) {
+                      Storage.uploadPhoto(globals.storageName, imagePath, 'image2.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 2: {
-                      storageBucket.uploadPhoto(imagePath, 'image3.jpg').then((value) {
+                      Storage.uploadPhoto(globals.storageName, imagePath, 'image3.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 3: {
-                      storageBucket.uploadPhoto(imagePath, 'image4.jpg').then((value) {
+                      Storage.uploadPhoto(globals.storageName, imagePath, 'image4.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 4: {
-                      storageBucket.uploadPhoto(imagePath, 'image5.jpg').then((value) {
+                      Storage.uploadPhoto(globals.storageName, imagePath, 'image5.jpg').then((value) {
                         print('done');
                       },);
                       break;

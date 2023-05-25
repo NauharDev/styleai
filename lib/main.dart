@@ -36,7 +36,7 @@ Future<void> main() async {
   );
 
   // runApp(MaterialApp(home: HomeScreen(globals.cameras)));
-  runApp(MaterialApp(navigatorKey: navigatorKey, home: const MainPage(), theme: ThemeData(appBarTheme: const AppBarTheme(shadowColor: null, elevation: 0), scaffoldBackgroundColor: Colors.blue, textTheme: const TextTheme(bodyMedium: TextStyle(color: Colors.white), bodyLarge: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16.0)))));
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, navigatorKey: navigatorKey, home: const MainPage(), theme: ThemeData(appBarTheme: const AppBarTheme(shadowColor: null, elevation: 0), scaffoldBackgroundColor: Colors.blue, textTheme: const TextTheme( bodyMedium: TextStyle(color: Colors.white, fontSize: 16.0), bodyLarge: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16.0)))));
 }
 
 
@@ -74,6 +74,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('StyleAI'),
         actions: [
@@ -100,22 +101,23 @@ class HomeScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                child: const Text('Scan Clothing Item'),
-                onPressed: () => {
-                  Navigator.push(
-                    context, MaterialPageRoute(
-                      builder: (context) => TakePictureScreen(cameras, globals.imagePaths))
-                  )
-                },
-              ),
-            ],
-          ),
-      ),
+      body: const Text('hello')
+      // body: Center(
+      //   child: Column(
+      //       mainAxisAlignment: MainAxisAlignment.center,
+      //       children: [
+      //         ElevatedButton(
+      //           child: const Text('Scan Clothing Item'),
+      //           onPressed: () => {
+      //             Navigator.push(
+      //               context, MaterialPageRoute(
+      //                 builder: (context) => TakePictureScreen(cameras, globals.imagePaths))
+      //             )
+      //           },
+      //         ),
+      //       ],
+      //     ),
+      // ),
       );
 
   }
