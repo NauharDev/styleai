@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:n_a_w/components/buttons.dart';
 
 import 'widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,7 +37,7 @@ Future<void> main() async {
   );
 
   // runApp(MaterialApp(home: HomeScreen(globals.cameras)));
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, navigatorKey: navigatorKey, home: const MainPage(), theme: ThemeData(appBarTheme: const AppBarTheme(shadowColor: null, elevation: 0), scaffoldBackgroundColor: Colors.blue, textTheme: const TextTheme( bodyMedium: TextStyle(color: Colors.white, fontSize: 16.0), bodyLarge: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16.0)))));
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, navigatorKey: navigatorKey, home: const MainPage(), theme: ThemeData(appBarTheme: const AppBarTheme(shadowColor: null, elevation: 0), scaffoldBackgroundColor: Colors.lightBlueAccent, textTheme: const TextTheme(headlineLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22), headlineMedium: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18), bodyMedium: TextStyle(color: Colors.white, fontSize: 16.0), bodyLarge: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16.0)))));
 }
 
 
@@ -55,10 +56,11 @@ class MainPage extends StatelessWidget {
           return const Text('something went wrong');
         }
         else if (snapshot.hasData) {
+          print(FirebaseAuth.instance.currentUser!.providerData);
           return HomeScreen(globals.cameras);
         }
         else {
-          return SignInTemplate(newUser: false,);
+          return SignInTemplate();
         }
       },
     )
@@ -74,8 +76,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.lightBlueAccent,
       appBar: AppBar(
+        backgroundColor: Colors.lightBlueAccent,
         title: const Text('StyleAI'),
         actions: [
            PopupMenuButton(
@@ -101,7 +104,46 @@ class HomeScreen extends StatelessWidget {
           )
         ],
       ),
-      body: const Text('hello')
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Wrap(
+              spacing: 8,
+              children: [
+                Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(100))
+                    ),
+                    child: FirebaseAuth.instance.currentUser!.photoURL != null
+                     ? ClipOval(child: Image.network(FirebaseAuth.instance.currentUser!.photoURL!, width: MediaQuery.of(context).size.width / 7, height: MediaQuery.of(context).size.width / 7))
+                     : const Icon(CupertinoIcons.person)
+                  ),
+              
+                Wrap(
+                  direction: Axis.vertical, 
+                  alignment: WrapAlignment.center,
+                  spacing: 5,
+                  
+                  children: [
+                    Text(FirebaseAuth.instance.currentUser!.displayName!, style: Theme.of(context).textTheme.headlineLarge), 
+                    Text(FirebaseAuth.instance.currentUser!.email!, style: Theme.of(context).textTheme.headlineMedium)
+                  ],
+                )
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              children: [
+                LargeTile(color: Colors.lightBlue[900], iconImage: Image.asset('assets/brown_flannel.png'), text: "Colour Suggestions",), 
+              ],
+            ),
+          )
+        ],
+      )
       // body: Center(
       //   child: Column(
       //       mainAxisAlignment: MainAxisAlignment.center,

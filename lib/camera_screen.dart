@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:camera/camera.dart';
@@ -179,31 +180,31 @@ class DisplayPictureScreen extends StatelessWidget{
                 onPressed: () {
                   switch (globals.imagePaths.length) {
                     case 0: {
-                      Storage.uploadPhoto(globals.storageName, imagePath, 'image1.jpg').then((value) {
+                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image1.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 1: {
-                      Storage.uploadPhoto(globals.storageName, imagePath, 'image2.jpg').then((value) {
+                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image2.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 2: {
-                      Storage.uploadPhoto(globals.storageName, imagePath, 'image3.jpg').then((value) {
+                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image3.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 3: {
-                      Storage.uploadPhoto(globals.storageName, imagePath, 'image4.jpg').then((value) {
+                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image4.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 4: {
-                      Storage.uploadPhoto(globals.storageName, imagePath, 'image5.jpg').then((value) {
+                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image5.jpg').then((value) {
                         print('done');
                       },);
                       break;

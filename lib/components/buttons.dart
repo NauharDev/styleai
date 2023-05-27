@@ -37,3 +37,30 @@ class SquareTile extends StatelessWidget {
     );
   }
 }
+
+
+class LargeTile extends StatelessWidget {
+  final String text;
+  final Image iconImage;
+  final Color? color;
+  const LargeTile({required this.text, required this.iconImage, required this.color, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return
+        Container(
+          width: MediaQuery.of(context).size.width / 3,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(8)), 
+            color: color
+          ),
+          child: Column(
+            children: 
+            [Expanded(child: iconImage), 
+            Text(text, style: Theme.of(context).textTheme.headlineMedium)]
+        ),
+    
+    );
+  }
+}

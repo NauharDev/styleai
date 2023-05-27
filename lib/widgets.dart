@@ -10,8 +10,7 @@ import 'components/buttons.dart';
 
 // ignore: must_be_immutable
 class SignInTemplate extends StatefulWidget {
-  bool newUser;
-  SignInTemplate({required this.newUser, super.key});
+  SignInTemplate({super.key});
 
   @override
   State<SignInTemplate> createState() => _SignInTemplateState();
@@ -22,6 +21,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
   final confirmController = TextEditingController();
+  bool newUser = true;
   bool invalidInput = false;
   bool signInError = false;
   String errorText = '';
@@ -37,7 +37,10 @@ class _SignInTemplateState extends State<SignInTemplate> {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
-          password: passController.text.trim());
+          password: passController.text.trim())
+          .then((value) async {
+            await FirebaseAuth.instance.currentUser!.updateDisplayName(nameController.text.trim().replaceAll(RegExp(r' '), '_'));
+          },);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         setState(() {
@@ -59,7 +62,9 @@ class _SignInTemplateState extends State<SignInTemplate> {
       }
     }
     globals.storageName = nameController.text.trim();
-    Storage.createStorage(globals.storageName);
+    print(FirebaseAuth.instance.currentUser!.displayName);
+    Storage.createStorage(FirebaseAuth.instance.currentUser!.uid);
+    print(FirebaseAuth.instance.currentUser!.providerData);
     navigatorKey.currentState!.pop();
   }
 
@@ -115,7 +120,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(flex: 1),
-            Text(widget.newUser ? 'Sign Up' : 'Log In',
+            Text(newUser ? 'Sign Up' : 'Log In',
                 style: Theme.of(context).textTheme.bodyLarge),
             const Spacer(flex: 7),
             Visibility(
@@ -131,7 +136,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
               ),
             ),
             Visibility(
-              visible: widget.newUser,
+              visible: newUser,
               child: SizedBox(
                 width: MediaQuery.of(context).size.width - 20.0,
                 child: TextField(
@@ -142,7 +147,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
                   onChanged: (value) {
                     if (emailController.text == '' ||
                         passController.text == '' ||
-                        (widget.newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
+                        (newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
                       return;
                     } else {
                       setState(() {
@@ -164,7 +169,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
                 onChanged: (value) {
                   if (emailController.text == '' ||
                       passController.text == '' ||
-                      (widget.newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
+                      (newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
                     return;
                   } else {
                     setState(() {
@@ -184,7 +189,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
                 onChanged: (value) {
                   if (emailController.text == '' ||
                       passController.text == '' ||
-                      (widget.newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
+                      (newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
                     return;
                   } else {
                     setState(() {
@@ -201,7 +206,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
               ),
             ),
             Visibility(
-              visible: widget.newUser,
+              visible: newUser,
               child: SizedBox(
                 width: MediaQuery.of(context).size.width - 20.0,
                 child: TextField(
@@ -213,7 +218,7 @@ class _SignInTemplateState extends State<SignInTemplate> {
                   onChanged: (value) {
                     if (emailController.text == '' ||
                         passController.text == '' ||
-                        (widget.newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
+                        (newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
                       return;
                     } else {
                       setState(() {
@@ -231,19 +236,20 @@ class _SignInTemplateState extends State<SignInTemplate> {
               ),
             ),
             TextButton(
-              child: Text(widget.newUser
+              child: Text(newUser
                   ? 'Have an account? Click here to log in!'
-                  : 'Don\'t have an account? Click here to sign up!'),
+                  : 'Don\'t have an account? Click here to sign up!', style: Typography.whiteCupertino.labelSmall,),
               onPressed: () {
-                widget.newUser
-                    ? Navigator.pop(context)
-                    : Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignInTemplate(
-                            newUser: !widget.newUser,
-                          ),
-                        ));
+                setState(() {
+                  signInError = false;
+                  invalidInput = false;
+                  errorText = '';
+                  nameController.text = '';
+                  emailController.text = '';
+                  passController.text = '';
+                  confirmController.text = '';
+                  newUser = !newUser;
+                });
               },
             ),
             Stack(children: [
@@ -262,13 +268,13 @@ class _SignInTemplateState extends State<SignInTemplate> {
                 onPressed: () {
                   if (emailController.text == '' ||
                       passController.text == '' ||
-                      (widget.newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
+                      (newUser && (confirmController.text == '' || nameController.text.trim() == ''))) {
                     setState(
                       () {
                         invalidInput = true;
                       },
                     );
-                  } else if (widget.newUser) {
+                  } else if (newUser) {
                     if (nameController.text.trim().contains('/')) {
                       setState(() {
                         signInError = true;
