@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart'; 
 import 'package:n_a_w/authentication/auth_services.dart';
+import 'dart:math';
+
+import 'package:n_a_w/camera_screen.dart';
+import 'package:n_a_w/globals.dart' as globals;
 
 class SquareTile extends StatelessWidget {
   final String purpose;
@@ -40,27 +44,39 @@ class SquareTile extends StatelessWidget {
 
 
 class LargeTile extends StatelessWidget {
+  final String purpose;
   final String text;
   final Image iconImage;
   final Color? color;
-  const LargeTile({required this.text, required this.iconImage, required this.color, super.key});
+  const LargeTile({required this.purpose, required this.text, required this.iconImage, required this.color, super.key});
 
   @override
   Widget build(BuildContext context) {
+    // double containerW =  MediaQuery.of(context).size.width / 4;
+    // double containerH = (MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + MediaQuery.of(context).padding.bottom)) / 4;
     return
-        Container(
-          width: MediaQuery.of(context).size.width / 3,
-          padding: const EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(8)), 
-            color: color
+        GestureDetector(
+          onTap: () {
+            if (purpose == 'colour recs') {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TakePictureScreen(globals.cameras, globals.imagePaths),) );
+            }
+            else if (purpose == 'closet') {
+              
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(8)), 
+              color: color
+            ),
+            child: Column(
+              children: 
+              [Expanded(child:iconImage), 
+              Text(text, style: Theme.of(context).textTheme.headlineMedium, softWrap: true,),
+              const SizedBox(height: 10)]
           ),
-          child: Column(
-            children: 
-            [Expanded(child: iconImage), 
-            Text(text, style: Theme.of(context).textTheme.headlineMedium)]
-        ),
-    
-    );
+            
+            ),
+        );
   }
 }

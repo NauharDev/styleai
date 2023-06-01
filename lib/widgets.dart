@@ -275,7 +275,11 @@ class _SignInTemplateState extends State<SignInTemplate> {
                       },
                     );
                   } else if (newUser) {
-                    if (nameController.text.trim().contains('/')) {
+                    if (nameController.text.trim().length < 6) {
+                      signInError = true;
+                      errorText = 'Usernames must be at lease six characters long';
+                    }
+                    else if (nameController.text.trim().contains('/')) {
                       setState(() {
                         signInError = true;
                         errorText = 'The given name is invalid. Please refrain from using \'/\' in the name.';
