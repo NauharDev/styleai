@@ -1,11 +1,12 @@
 from flask import Flask, jsonify, request
+import numpy as np
 from flask_restful import Resource, Api, reqparse
 from sklearn.cluster import KMeans
 import cv2
 from collections import Counter
 import math
 import base64
-
+from urllib.request import urlopen
 
 app = Flask(__name__)
 api = Api(app)
@@ -31,17 +32,14 @@ api = Api(app)
 
 # api.add_resource(ColourDetector, '/<string:imagePath>')
 
-@app.route('/test', methods=['GET'])
-def tester():
-    image = cv2.imread('/var/mobile/Containers/Data/Application/A161BE23-1D6F-4B71-9B7D-A02FEAD32CBE/Documents/camera/pictures/CAP_13A974D7-3217-4AD3-A41B-9079404AEDDA.jpg')
-    return {'shape': image is None}
-
 
 def get_image_colour(image_path: str) -> str:
     """
     Return the name of the colour of the clothing item in the image given by image_path.
     """
-    image = cv2.imread(image_path)
+    req = urlopen(image_path)
+    arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+    image = cv2.imdecode(arr, -1)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = image.reshape(image.shape[0] * image.shape[1], 3)
     model = KMeans(n_clusters=3, n_init=10)
@@ -148,10 +146,11 @@ def colour_recs() -> str:
     :return: string representing the colour suggestions for the given clothing item
     """
     d = {}
-    modified = str(request.args['imagePath'])
-    for i in range(len(modified)):
-        if modified[i] == '+':
-            modified[i] = '/'
+    modified = str(request.args['imagePath']).replace('!', '/')
+    modified = modified.replace('nozzyk', '&')
+    modified = modified.replace('nozzzyk', '%')
+    print(modified)
+    # d['colour_rec'] = modified
     item_colour = get_image_colour(image_path=modified)
     if item_colour == 'black':
         d['colour_rec'] = 'black goes with almost every colour. Try matching with white, black, grey, olive green or orange.'

@@ -72,7 +72,10 @@ class LargeTile extends StatelessWidget {
             child: Column(
               children: 
               [Expanded(child:iconImage), 
-              Text(text, style: Theme.of(context).textTheme.headlineMedium, softWrap: true,),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                child: FittedBox(fit: BoxFit.fitWidth, child: Text(text, style: Theme.of(context).textTheme.headlineMedium, softWrap: true,)),
+              ),
               const SizedBox(height: 10)]
           ),
             

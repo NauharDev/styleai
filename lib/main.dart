@@ -66,7 +66,8 @@ class MainPage extends StatelessWidget {
   const MainPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+    return Scaffold(
           body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -77,14 +78,15 @@ class MainPage extends StatelessWidget {
           } else if (snapshot.hasError) {
             return const Text('something went wrong');
           } else if (snapshot.hasData) {
-            print(FirebaseAuth.instance.currentUser!.providerData);
-            return const Text('hello');
-            // return HomeScreen(globals.cameras);
+            
+            return HomeScreen(globals.cameras);
           } else {
             return SignInTemplate();
           }
         },
-      ));
+      )
+      );
+  }
 }
 
 class HomeScreen extends StatefulWidget {
@@ -227,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             text: TextSpan(children: [
                               TextSpan(
                                   text: FirebaseAuth
-                                      .instance.currentUser!.displayName!,
+                                      .instance.currentUser!.displayName ?? "guest user",
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineLarge),

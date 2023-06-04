@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:camera/camera.dart';
@@ -63,7 +64,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('StyleAI'),
+        title: const Text('Take Photo of Clothing Item'),
       ),
       body: FutureBuilder<void> (
         future: _initializeControllerFuture,
@@ -180,25 +181,25 @@ class DisplayPictureScreen extends StatelessWidget{
                 onPressed: () {
                   switch (globals.imagePaths.length) {
                     case 0: {
-                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image1.jpg').then((value) {
+                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image5.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 1: {
-                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image2.jpg').then((value) {
+                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image5.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 2: {
-                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image3.jpg').then((value) {
+                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image5.jpg').then((value) {
                         print('done');
                       },);
                       break;
                     }
                     case 3: {
-                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image4.jpg').then((value) {
+                      Storage.uploadPhoto(FirebaseAuth.instance.currentUser!.uid, imagePath, 'image5.jpg').then((value) {
                         print('done');
                       },);
                       break;
@@ -275,19 +276,18 @@ class PhotoSubmitScreen extends StatelessWidget {
   }
 
   Future getData(String imagePath) async {
-    Dio dio = Dio();
     // String modified = imagePath.replaceAll(RegExp(r'/'), '+');
     // Uint8List encodedList = ascii.encode(imagePath);
     // String base64Message = base64.encode(encodedList);
-    print(imagePath);
-    Response response = await dio.get('https://5560-24-150-91-41.ngrok-free.app/recs?imagePath=$imagePath');
+    // print(imagePath);
+    http.Response response = await http.get(Uri.parse('https://5a68-24-150-91-41.ngrok-free.app/recs?imagePath=$imagePath'));
 
     // Uri uri = Uri.parse('http://127.0.0.1:3333/recs?imagePath=$modified');
     // print(uri);
     // print(uri.toString() == 'http://127.0.0.1:3333/recs?imagePath=L1VzZXJzL25hdWhhcmthcHVyL0RvY3VtZW50cy9OaWdodHMtYW5kLVdlZWtlbmRzL2xpYi9JTUdfMzc2NC5qcGc=');
 
     // http.Response response = await http.get(uri);
-    print(response);
+    // print(response);
     return response;
   }
 
@@ -304,9 +304,16 @@ class PhotoSubmitScreen extends StatelessWidget {
           arrangePhotos(imagePaths) + [TextButton(
             child: const Text('Get colour suggestions!'), 
             onPressed: () async {
-              Response response = await getData(imageFiles[0].path);
-              // var decodedData = jsonDecode(colourRec);
-              // print(decodedData['colour_rec']);
+              String uid = FirebaseAuth.instance.currentUser!.uid;
+              String downloadLink = await FirebaseStorage.instance.ref().child('$uid/image1.jpg').getDownloadURL();
+              print(downloadLink);
+              downloadLink = downloadLink.replaceAll(RegExp(r'/'), '!');
+              downloadLink = downloadLink.replaceAll(RegExp(r'&'), 'nozzyk');
+              downloadLink = downloadLink.replaceAll(RegExp(r'%'), 'nozzzyk');
+              print(downloadLink);
+              http.Response response = await getData(downloadLink);
+              var decodedData = jsonDecode(response.body);
+              print(decodedData['colour_rec']);
               
             },
           )],
