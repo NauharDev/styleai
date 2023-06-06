@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:n_a_w/components/buttons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'globals.dart' as globals;
 import 'cloud storage/storage.dart';
@@ -19,7 +20,8 @@ import 'cloud storage/storage.dart';
 class TakePictureScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
   final List<String> imagePaths;
-  const TakePictureScreen(this.cameras, this.imagePaths, {super.key});
+  final bool fromSubmitScreen;
+  const TakePictureScreen(this.cameras, this.imagePaths, this.fromSubmitScreen, {super.key});
 
 
   @override
@@ -56,84 +58,139 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool photosTaken;
-    if (imagePaths.isNotEmpty) {
-      photosTaken = true;
-    } else {
-      photosTaken = false;
-    }
+    
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.lightBlueAccent,
         title: const Text('Take Photo of Clothing Item'),
       ),
-      body: FutureBuilder<void> (
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return CameraPreview(controller);
-          } else {
-            return const Center(child: CircularProgressIndicator(),);
-          }
-        },
-        ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+      body: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [Visibility(
-              visible: globals.imagePaths.length < 5 ? true : false,
-              child: FloatingActionButton(
-                onPressed: () async {
-                  try {
+          FutureBuilder(
+            future: _initializeControllerFuture,
+            builder:(context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return CameraPreview(controller);
+              }
+              else {
+                return Center(child: CircularProgressIndicator(color: Colors.lightBlue[900]),);
+              }
+            },
+          ), 
+          Positioned(
+            bottom: 20, 
+            child: Row(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 4.5
+                ), 
+                IconButton(
+                  color: Theme.of(context).primaryColor,
+                  icon: const Icon(CupertinoIcons.camera_fill), 
+                  onPressed:() async {
                     await _initializeControllerFuture;
                     final image = await controller.takePicture();
-
-            
                     if (!mounted) return;
-
-                    print(image.path);
-                    
-                    
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => DisplayPictureScreen(
-                          imagePath: image.path,
-                        ),
-                      )
+                    await Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) => DisplayPictureScreen(imagePath: image.path, fromSubmitScreen: false),)
                     );
-                  } catch (e) {
-                    // ignore: avoid_print
-                    print(e);
-                  }
-                },
-              child: const Icon(Icons.camera_alt)
-              ),
+                  },
+                ), 
+                IconButton(
+                  color: Theme.of(context).primaryColor,
+                  icon: const Icon(CupertinoIcons.camera_rotate_fill), 
+                  onPressed:() {
+                    initCamera(widget.cameras[frontFacing ? 0 : 1]);
+                    frontFacing = !frontFacing;
+                  },
+                )
+              ],
             ),
-            
-            IconButton(
-              icon: const Icon(CupertinoIcons.switch_camera), 
-              onPressed: () {
-                setState(() => frontFacing = !frontFacing);
-                initCamera(widget.cameras[frontFacing ? 1 : 0]);
-                },
-            ),
-            Visibility(
-              visible: photosTaken,
-              child: TextButton(
-                child: const Text('View Photos'),
-                onPressed: () => {
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (context) => PhotoSubmitScreen(imagePaths: imagePaths, imageFiles: globals.images,),))
-                },
-              ),
-            )
-            ]
-          ),
+          )
         ],
-      ),
-        );
+      )
+
+    );
+    
+    // return Scaffold(
+      // appBar: AppBar(
+      //   backgroundColor: Colors.lightBlueAccent,
+      //   title: const Text('Take Photo of Clothing Item'),
+      // ),
+    //   body: FutureBuilder<void> (
+    //     future: _initializeControllerFuture,
+    //     builder: (context, snapshot) {
+    //       if (snapshot.connectionState == ConnectionState.done) {
+    //         return CameraPreview(controller);
+    //       } else {
+    //         return const Center(child: CircularProgressIndicator(),);
+    //       }
+    //     },
+    //     ),
+    //   floatingActionButton: Column(
+    //     mainAxisAlignment: MainAxisAlignment.end,
+    //     children: [
+    //       Row(
+    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //         children: [Visibility(
+    //           visible: globals.imagePaths.length < 5 ? true : false,
+    //           child: FloatingActionButton(
+    //             onPressed: () async {
+    //               try {
+    //                 await _initializeControllerFuture;
+    //                 final image = await controller.takePicture();
+
+            
+    //                 if (!mounted) return;
+
+    //                 print(image.path);
+                    
+                    
+    //                 await Navigator.of(context).push(
+    //                   MaterialPageRoute(
+    //                     builder: (context) => DisplayPictureScreen(
+    //                       imagePath: image.path, fromSubmitScreen: widget.fromSubmitScreen,
+    //                     ),
+    //                   )
+    //                 );
+    //               } catch (e) {
+    //                 // ignore: avoid_print
+    //                 print(e);
+    //               }
+    //             },
+    //           child: const Icon(Icons.camera_alt)
+    //           ),
+    //         ),
+            
+    //         IconButton(
+    //           icon: const Icon(CupertinoIcons.switch_camera), 
+    //           onPressed: () {
+    //             setState(() {
+    //               initCamera(widget.cameras[frontFacing ? 0 : 1]);
+    //               frontFacing = !frontFacing;
+    //             });
+    //             },
+    //         ),
+    //         Visibility(
+    //           visible: globals.imagePaths.isNotEmpty,
+    //           child: TextButton(
+    //             child: const Text('View Photos'),
+    //             onPressed: () => {
+    //               Navigator.push(
+    //                 context, 
+    //                 MaterialPageRoute(builder: (context) => PhotoSubmitScreen(imagePaths: imagePaths),))
+    //             },
+    //           ),
+    //         )
+    //         ]
+    //       ),
+    //     ],
+    //   ),
+    //     );
+
+  
 
     }
     
@@ -142,10 +199,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
 class DisplayPictureScreen extends StatelessWidget{
   final String imagePath;
+  final bool fromSubmitScreen;
   final Storage storageBucket = Storage();
 
 
-  DisplayPictureScreen({required this.imagePath, super.key});
+  DisplayPictureScreen({required this.imagePath, required this.fromSubmitScreen, super.key});
 
   Future<String> getDirectoryPath() async {
     final directory = await getApplicationDocumentsDirectory();
@@ -165,6 +223,7 @@ class DisplayPictureScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.lightBlueAccent,
         title: const Text('StyleAI'),
       ),
       body: Column(
@@ -213,8 +272,17 @@ class DisplayPictureScreen extends StatelessWidget{
 
                   }
                   globals.imagePaths.add(imagePath);
+                  if (fromSubmitScreen || globals.imagePaths.length == 5) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => PhotoSubmitScreen(imagePaths: globals.imagePaths),)
+                    );
+                  }
+                  else {
                   Navigator.push(context, 
-                  MaterialPageRoute(builder: (context) => TakePictureScreen(globals.cameras, globals.imagePaths),));
+                  MaterialPageRoute(builder: (context) => TakePictureScreen(globals.cameras, globals.imagePaths, false),));
+
+                  }
                 }
               )
             )
@@ -229,8 +297,7 @@ class DisplayPictureScreen extends StatelessWidget{
 
 class PhotoSubmitScreen extends StatelessWidget {
   final List<String> imagePaths;
-  final List<File> imageFiles;
-  const PhotoSubmitScreen({required this.imagePaths, required this.imageFiles, super.key});
+  const PhotoSubmitScreen({required this.imagePaths, super.key});
  
   
   List<Widget> arrangePhotos(List<String> imagePaths) {
@@ -297,26 +364,43 @@ class PhotoSubmitScreen extends StatelessWidget {
   
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.lightBlueAccent,
         title: const Text('StyleAI'),
       ),
       body: Column(
         children: 
-          arrangePhotos(imagePaths) + [TextButton(
-            child: const Text('Get colour suggestions!'), 
-            onPressed: () async {
-              String uid = FirebaseAuth.instance.currentUser!.uid;
-              String downloadLink = await FirebaseStorage.instance.ref().child('$uid/image1.jpg').getDownloadURL();
-              print(downloadLink);
-              downloadLink = downloadLink.replaceAll(RegExp(r'/'), '!');
-              downloadLink = downloadLink.replaceAll(RegExp(r'&'), 'nozzyk');
-              downloadLink = downloadLink.replaceAll(RegExp(r'%'), 'nozzzyk');
-              print(downloadLink);
-              http.Response response = await getData(downloadLink);
-              var decodedData = jsonDecode(response.body);
-              print(decodedData['colour_rec']);
-              
-            },
-          )],
+          [
+            Flexible(
+              flex: 2,
+              child: GridView.count(
+                crossAxisCount: 2,
+                padding: const EdgeInsets.all(20),
+                crossAxisSpacing: 20,
+                children: [
+                  PhotoTile(image: Image.asset("assets/white_tee.png", scale: 1.9), colour: Colors.lightBlue[900], noImage: true), 
+                ],
+              ),
+            ), 
+          Flexible(
+            flex: 1,
+            child: TextButton(
+              child: const Text('Get colour suggestions!'), 
+              onPressed: () async {
+                String uid = FirebaseAuth.instance.currentUser!.uid;
+                String downloadLink = await FirebaseStorage.instance.ref().child('$uid/image1.jpg').getDownloadURL();
+                print(downloadLink);
+                downloadLink = downloadLink.replaceAll(RegExp(r'/'), '!');
+                downloadLink = downloadLink.replaceAll(RegExp(r'&'), 'nozzyk');
+                downloadLink = downloadLink.replaceAll(RegExp(r'%'), 'nozzzyk');
+                print(downloadLink);
+                http.Response response = await getData(downloadLink);
+                var decodedData = jsonDecode(response.body);
+                print(decodedData['colour_rec']);
+                
+              },
+            ),
+          )
+          ],
         
       )
     );

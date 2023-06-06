@@ -46,6 +46,7 @@ Future<void> main() async {
       theme: ThemeData(
           appBarTheme: const AppBarTheme(shadowColor: null, elevation: 0),
           scaffoldBackgroundColor: Colors.lightBlueAccent,
+          primaryColor: Colors.lightBlue[900],
           textTheme: const TextTheme(
               headlineLarge: TextStyle(
                   color: Colors.white,
@@ -277,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   LargeTile(
                     purpose: "colour recs",
-                    color: Colors.lightBlue[900],
+                    color: Theme.of(context).primaryColor,
                     iconImage: Image.asset(
                       'assets/brown_flannel.png',
                     ),

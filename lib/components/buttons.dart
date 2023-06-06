@@ -58,11 +58,12 @@ class LargeTile extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (purpose == 'colour recs') {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TakePictureScreen(globals.cameras, globals.imagePaths),) );
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TakePictureScreen(globals.cameras, globals.imagePaths, false),) );
             }
             else if (purpose == 'closet') {
               
             }
+          
           },
           child: Container(
             decoration: BoxDecoration(
@@ -81,5 +82,57 @@ class LargeTile extends StatelessWidget {
             
             ),
         );
+  }
+}
+
+
+class PhotoTile extends StatelessWidget {
+  final Color? colour;
+  final Image? image;
+  final bool noImage;
+  const PhotoTile({this.colour, this.image, required this.noImage, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+
+    if (noImage) {
+      return GestureDetector(
+        onTap:() {
+          Navigator.push(
+            context, 
+            MaterialPageRoute(
+              builder: (context) => TakePictureScreen(globals.cameras, globals.imagePaths, true),
+            )
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(8)), 
+            color: colour!
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              image!,
+              FittedBox(fit: BoxFit.fitWidth, child: Text('Add Item', style: Theme.of(context).textTheme.headlineMedium,))
+            ],
+          )
+        )
+      );
+
+    }
+    else {
+      return GestureDetector(
+        onTap:() {
+          print('hello');
+        },
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          child: image,
+        )
+      );
+
+    }
+
   }
 }
