@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:n_a_w/cloud storage/storage.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
@@ -8,9 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'components/buttons.dart';
 
-// ignore: must_be_immutable
 class SignInTemplate extends StatefulWidget {
-  SignInTemplate({super.key});
+  const SignInTemplate({super.key});
 
   @override
   State<SignInTemplate> createState() => _SignInTemplateState();
@@ -111,15 +111,16 @@ class _SignInTemplateState extends State<SignInTemplate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text(
+        backgroundColor: Colors.lightBlueAccent,
+          title: Text(
         'StyleAI',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-      )),
+        style: Theme.of(context).textTheme.headlineLarge),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Spacer(flex: 1),
+            const Spacer(flex: 2),
             Text(newUser ? 'Sign Up' : 'Log In',
                 style: Theme.of(context).textTheme.bodyLarge),
             const Spacer(flex: 7),
@@ -212,8 +213,9 @@ class _SignInTemplateState extends State<SignInTemplate> {
                 child: TextField(
                   controller: confirmController,
                   autocorrect: false,
-                  decoration: const InputDecoration(
+                  decoration:  InputDecoration(
                     hintText: 'confirm password',
+                    hintStyle: Theme.of(context).textTheme.bodyMedium
                   ),
                   onChanged: (value) {
                     if (emailController.text == '' ||
@@ -253,17 +255,8 @@ class _SignInTemplateState extends State<SignInTemplate> {
               },
             ),
             Stack(children: [
-              Positioned.fill(
-                  child: Container(
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          gradient: LinearGradient(colors: [
-                            Color(0xFF0D47A1),
-                            Color(0xFF1976D2),
-                            Color(0xFF42A5F5),
-                          ])))),
-              TextButton(
-                style: TextButton.styleFrom(foregroundColor: Colors.white),
+              CupertinoButton(
+                color: Theme.of(context).primaryColor,
                 child: const Text('Submit', style: TextStyle(fontSize: 18.0)),
                 onPressed: () {
                   if (emailController.text == '' ||
@@ -324,32 +317,28 @@ class _SignInTemplateState extends State<SignInTemplate> {
               imagePath: 'assets/btn_google_light_normal_ios.png',
             ),
             const Spacer(flex: 2)
-            // Flexible(
-            //   fit: FlexFit.tight,
-            //   child: StreamBuilder(
-            //     stream: FirebaseAuth.instance.authStateChanges(),
-            //     builder: (context, snapshot) {
-            //       if (snapshot.connectionState == ConnectionState.waiting) {
-            //         return const Center(child: CircularProgressIndicator());
-            //       }
-            //       else if (snapshot.hasError) {
-            //         return Container(
-            //           decoration: const  BoxDecoration(
-            //             borderRadius: BorderRadius.all(Radius.circular(10)),
-            //             color: Colors.red,
-            //           ),
-            //           child: Text('Invalid sign-in credentials. Please try again.',
-            //             style: Theme.of(context).textTheme.bodyMedium,),
-            //         );
-            //       }
-            //       else {
-            //         return HomeScreen(globals.cameras);
-            //       }
-            //     },
-            //   ),
-            // )
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class ColourRecScreen extends StatefulWidget {
+  const ColourRecScreen({super.key});
+
+  @override
+  State<ColourRecScreen> createState() => _ColourRecScreenState();
+}
+
+class _ColourRecScreenState extends State<ColourRecScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.lightBlueAccent,
+      appBar: AppBar(
+        title: Text("Colour Suggestions", style: Theme.of(context).textTheme.headlineMedium,)
       ),
     );
   }

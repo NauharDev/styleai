@@ -89,13 +89,13 @@ class LargeTile extends StatelessWidget {
 class PhotoTile extends StatelessWidget {
   final Color? colour;
   final Image? image;
-  final bool noImage;
-  const PhotoTile({this.colour, this.image, required this.noImage, super.key});
+  final bool noPhoto;
+  const PhotoTile({this.colour, this.image, required this.noPhoto, super.key});
 
   @override
   Widget build(BuildContext context) {
 
-    if (noImage) {
+    if (noPhoto) {
       return GestureDetector(
         onTap:() {
           Navigator.push(
@@ -108,7 +108,19 @@ class PhotoTile extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(8)), 
-            color: colour!
+            color: colour!, 
+            boxShadow: [ 
+              BoxShadow(
+                color: Theme.of(context).primaryColorLight, 
+                offset: const Offset(-4, -4), 
+                blurRadius: 6
+              ), 
+              BoxShadow(
+                color: Theme.of(context).primaryColorDark, 
+                offset: const Offset(4, 4), 
+                blurRadius: 6
+              )
+            ]
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -126,9 +138,25 @@ class PhotoTile extends StatelessWidget {
         onTap:() {
           print('hello');
         },
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          child: image,
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).primaryColorLight, 
+                offset: const Offset(-4, -4), 
+                blurRadius: 6
+              ), 
+              BoxShadow(
+                color: Theme.of(context).primaryColorDark,
+                offset: const Offset(4, 4), 
+                blurRadius: 6
+              )
+            ]
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            child: FittedBox(fit: BoxFit.cover, child: image),
+          ),
         )
       );
 

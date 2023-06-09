@@ -44,21 +44,23 @@ Future<void> main() async {
       navigatorKey: navigatorKey,
       home: const MainPage(),
       theme: ThemeData(
+          primaryColorDark: Colors.blue[900],
+          primaryColorLight: Colors.lightBlue[100],
           appBarTheme: const AppBarTheme(shadowColor: null, elevation: 0),
           scaffoldBackgroundColor: Colors.lightBlueAccent,
           primaryColor: Colors.lightBlue[900],
           textTheme: const TextTheme(
-              headlineLarge: TextStyle(
+              headlineLarge:  TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 22),
-              headlineMedium: TextStyle(
+              headlineMedium:  TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 18),
-              bodyMedium: TextStyle(color: Colors.white, fontSize: 16.0),
+              bodyMedium:  TextStyle(color: Colors.white, fontSize: 16.0),
               bodyLarge: TextStyle(
-                  color: Colors.blue,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0)))));
 }
@@ -82,7 +84,7 @@ class MainPage extends StatelessWidget {
             
             return HomeScreen(globals.cameras);
           } else {
-            return SignInTemplate();
+            return const SignInTemplate();
           }
         },
       )
@@ -175,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.lightBlueAccent,
         appBar: AppBar(
           backgroundColor: Colors.lightBlueAccent,
-          title: const Text('StyleAI'),
+          title: Text('StyleAI', style: Theme.of(context).textTheme.headlineLarge),
           actions: [
             PopupMenuButton(
               onSelected: (value) {
