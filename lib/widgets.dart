@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'globals.dart' as globals;
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'components/buttons.dart';

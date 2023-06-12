@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
@@ -9,23 +7,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:n_a_w/components/buttons.dart';
+import 'package:n_a_w/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'globals.dart' as globals;
 import 'cloud storage/storage.dart';
 
-class _MediaSizeClipper extends CustomClipper<Rect> {
-  final Size mediaSize;
-  const _MediaSizeClipper(this.mediaSize);
-  @override
-  Rect getClip(Size size) {
-    return Rect.fromLTWH(0, 0, mediaSize.width, mediaSize.height);
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Rect> oldClipper) {
-    return true;
-  }
-}
 
 class TakePictureScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -110,6 +96,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                         await _initializeControllerFuture;
                         final image = await controller.takePicture();
                         if (!mounted) return;
+                        print(image.path);
                         await Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -318,23 +305,6 @@ class PhotoSubmitScreen extends StatelessWidget {
     return photoTiles;
   }
 
-  Future getData(String imagePath) async {
-    // String modified = imagePath.replaceAll(RegExp(r'/'), '+');
-    // Uint8List encodedList = ascii.encode(imagePath);
-    // String base64Message = base64.encode(encodedList);
-    // print(imagePath);
-    http.Response response = await http.get(Uri.parse(
-        'https://5a68-24-150-91-41.ngrok-free.app/recs?imagePath=$imagePath'));
-
-    // Uri uri = Uri.parse('http://127.0.0.1:3333/recs?imagePath=$modified');
-    // print(uri);
-    // print(uri.toString() == 'http://127.0.0.1:3333/recs?imagePath=L1VzZXJzL25hdWhhcmthcHVyL0RvY3VtZW50cy9OaWdodHMtYW5kLVdlZWtlbmRzL2xpYi9JTUdfMzc2NC5qcGc=');
-
-    // http.Response response = await http.get(uri);
-    // print(response);
-    return response;
-  }
-
   @override
   Widget build(BuildContext context) {
     List<Widget> photoTiles = arrangePhotos(imagePaths);
@@ -382,23 +352,15 @@ class PhotoSubmitScreen extends StatelessWidget {
                 ),
                 child: CupertinoButton(
                   color: Theme.of(context).primaryColor,
-                  child: const Text('Get colour suggestions!'),
+                  child: const Text('Get colour suggestions'),
                   onPressed: () async {
-                    String uid = FirebaseAuth.instance.currentUser!.uid;
-                    String downloadLink = await FirebaseStorage.instance
-                        .ref()
-                        .child('$uid/image1.jpg')
-                        .getDownloadURL();
-                    print(downloadLink);
-                    downloadLink = downloadLink.replaceAll(RegExp(r'/'), '!');
-                    downloadLink =
-                        downloadLink.replaceAll(RegExp(r'&'), 'nozzyk');
-                    downloadLink =
-                        downloadLink.replaceAll(RegExp(r'%'), 'nozzzyk');
-                    print(downloadLink);
-                    http.Response response = await getData(downloadLink);
-                    var decodedData = jsonDecode(response.body);
-                    print(decodedData['colour_rec']);
+                    Navigator.pushReplacement(context, 
+                    MaterialPageRoute(builder: (context) => const ColourRecScreen(),));
+                    List<String> responses = [];
+                    
+                    
+                    print(responses);
+
                   },
                 ),
               ),
