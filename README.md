@@ -2,6 +2,10 @@
 
 Repository for the StyleAI Mobile Application.
 
+## App Description
+
+Welcome to StyleAI, an AI-Powered personal stylist at your fingertips! The app is currently under development, and the team has nearly completed the colour suggestion feature. This feature detects the colour of the user's clothing using OpenCV and Scikit-Learn, and the app uses this information to provide colour-suggestions to help the user create colour-coordinated outfits. This app is built for iOS using Flutter, meaning that users can dress confidently wherever they go. Future iterations of the app will have features which consider the user's general location (for weather purposes) and event/occasion to provide more personalized clothing suggestions.
+
 ## Software Requirements to Run This Project
 
 For all operating systems:
